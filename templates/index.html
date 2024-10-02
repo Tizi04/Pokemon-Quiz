@@ -1,0 +1,48 @@
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="../static/style.css">
+        <title>POKEMON QUIZ</title>
+      </head>
+      <body>
+        <header>
+            <h1>QUIZ GAME</h1>
+            <p>Pokemon</p>
+        </header>
+
+        <div class="container">
+            <section id="p0">
+                <h3>1- ¿Cuál es la habilidad de {{ pokemon }}?</h3>
+                {% if habilidades %}
+                    {% for habilidad in habilidades %}
+                        <label>
+                            <input type="radio" value="{{ habilidad }}" name="p0"> {{ habilidad }}
+                        </label>
+                        <br>
+                    {% endfor %}
+                {% else %}
+                    <p>No abilities found.</p>
+                {% endif %}
+            </section>
+            <section id="p1">
+                <h3>1- ¿De que tipo es: {{ pokemon_2 }}?</h3>
+                {% if types %}
+                    {% for type in types %}
+                        <label>
+                            <input type="radio" value="{{ type }}" name="p0"> {{ type }}
+                        </label>
+                        <br>
+                    {% endfor %}
+                {% else %}
+                    <p>No type found.</p>
+                {% endif %}
+            </section>
+
+            <button id="search">FINISH</button>
+            <h2>Cantidad acertadas: <span id="resultado"></span></h2>
+        </div>
+        <script src=""></script>
+      </body>
+      </html>  
