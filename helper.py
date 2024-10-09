@@ -1,31 +1,30 @@
 import requests
 import random
 
-def select_pokemon(pokemon):
+def test():
    
-   url = f"https://pokeapi.co/api/v2/pokemon/{pokemon}"
+   url = f"https://pokeapi.co/api/v2/pokemon?limit=10000"
 
    response = requests.get(url)
 
    data = response.json()
+   nombres = [] 
 
-   nombre = data.get('types')
-
-   if nombre and len(nombre) > 0:
-       primer_objeto = nombre[0]
-
-       if 'generation' in primer_objeto and 'name' in primer_objeto['generation']:
-           nombre_generacion = primer_objeto['generation']['name']
-
-
-   return nombre
+   for p in data['results']:
+       nombre = p['name']
+       nombres.append(nombre)
+    
+   return data
+       
     
 def select_random_pokemon():
 
+    # Total of pokemons in game
     total_pokemons = 1025
     random_number = random.randint(1, total_pokemons)
 
     pokemon_names = []
+    # Get te pokemon API
     url = "https://pokeapi.co/api/v2/pokemon?limit=100000" 
     response = requests.get(url)
 
@@ -46,8 +45,19 @@ def select_random_pokemon():
 
     return pokemon
 
+def select_unique_random_pokemon(n):
+    selected_pokemons =  set()
+
+    while len(selected_pokemons) < n:
+        pokemon = select_random_pokemon()
+        selected_pokemons.add(pokemon)
+
+    return list(selected_pokemons)
+
+
 def select_pokemon_abilities(pokemon):
 
+    # Get te pokemon API
     url_pokemon = f"https://pokeapi.co/api/v2/pokemon/{pokemon}"
 
     response_pokemon = requests.get(url_pokemon)
@@ -63,6 +73,7 @@ def select_pokemon_abilities(pokemon):
 
 def select_all_abilities():
 
+    # Get te abilities API  
     url = "https://pokeapi.co/api/v2/ability?limit=100"  # Para obtener habilidades
     all_abilities = []
 
@@ -83,38 +94,68 @@ def select_all_abilities():
     return all_abilities
     
 def select_pokemon_type(pokemon):
-    
+
+    # Get te pokemon API
     url = f"https://pokeapi.co/api/v2/pokemon/{pokemon}"
 
     response = requests.get(url)
 
+    # Check the status code
     if response.status_code == 200:
         data = response.json()
         types = []
 
+        # Get the types of the pokemon in the object
         for slot in data['types']:
             type_name = slot['type']['name']
             types.append(type_name)
-
-        return types    
+    else:
+        return None
+    
+    return types    
     
 
 def select_all_types():
 
+    # Get the type-pokemon API
     url = f"https://pokeapi.co/api/v2/type/"
 
     response = requests.get(url)
-
+    
+    # Check the status code
     if response.status_code == 200:
 
         all_types = []
         data = response.json()
         results = data.get('results')
 
+        # Get all the abilities from de API object
         for slot in results:
             type = slot.get('name')
             if type != 'unknown':
                 all_types.append(type)
-
+    else:
+        return None
 
     return all_types
+
+def select_all_stats(pokemon):
+
+    url = f"https://pokeapi.co/api/v2/pokemon/{pokemon}"
+
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        data = response.json()
+        info = data.get('stats')
+        stats = []
+
+        for stat in info:
+            stat_name = stat['stat']['name']
+            stat_n = stat['base_stat']
+
+            stat_object = {stat_name:stat_n}
+            stats.append(stat_object)
+    else:
+        return None
+    return stats
