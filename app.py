@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
 from helper import select_random_pokemon, select_pokemon_abilities, select_all_abilities, test, select_pokemon_type, select_all_types, select_all_stats, select_unique_random_pokemon
-from helper2 import verify_json
 import random
 
 app = Flask(__name__)
@@ -84,11 +83,10 @@ def prueba():
     if request.method == 'POST':
         pokemon = request.form.get('pokemon')
         info = test()
-        todos_los_detalles = verify_json()
         types = select_pokemon_type(pokemon)
         data = select_all_types()
         stats = select_all_stats(pokemon)
-        return f"{todos_los_detalles}"
+        return f"{data}"
     
     return render_template('prueba.html')
 
