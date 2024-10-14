@@ -1,80 +1,49 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 from helper import select_random_pokemon, select_pokemon_abilities, select_all_abilities, test, select_pokemon_type, select_all_types, select_all_stats, select_unique_random_pokemon
+from questions import select_random_question
 import random
+import secrets
 
 app = Flask(__name__)
+app.secret_key = secrets.token_hex(16)
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
 
-    # Select a random pokemon for question 1
-    pokemon = select_random_pokemon()
-    # Select the pokemon abilities 
-    abilities = select_pokemon_abilities(pokemon)
-    # Select all the abilities of pokemons
-    all_abilities = select_all_abilities()
-    # Array quiz 1
-    first_quiz = [3]
-    # Fill and shuffle the array
-    n_abilities = len(abilities) - 1
-    n_random_abilities = random.randint(0,n_abilities)
-    first_quiz = random.sample(all_abilities, 3)
-    first_quiz.append(abilities[n_random_abilities])    
-    random.shuffle(first_quiz)
+
+    if request.method == 'POST': 
+
+        choice = request.form.get("p0")
+        correct_answer = session.get('correct_answer')
+        
+        if 'ct' not in session:
+            session['ct'] = 0
 
 
-    # Select a random pokemon for question 2
-    pokemon_2 = select_random_pokemon()
-    # Select the type of the pokemon
-    pokemon_type = select_pokemon_type(pokemon_2)
-    # select all the types of pokemon
-    all_types = select_all_types()
-    # Creat a new array with the pokemon type and random pokemons types
-    new_all_types = [type for type in all_types if type not in pokemon_type]
-    # Array quiz 2
-    second_quiz = [3]
-    # Fill an shuffle the array
-    n_types = len(pokemon_type) - 1
-    n_random_types = random.randint(0, n_types)
-    second_quiz = random.sample(new_all_types, 3)
-    second_quiz.append(pokemon_type[n_random_types])
-    random.shuffle(second_quiz)
+        print(f"Choice: {choice}, Correct Answer: {correct_answer}")  # Imprime las respuestas para ver si coinciden
 
-    # Select 4 uniques randoms pokemons for question 3
-    uniques_pokemons = select_unique_random_pokemon(4)
-    # Get the stats of the pokemons 
-    pokemon_3, pokemon_4, pokemon_5, pokemon_6 = uniques_pokemons
-
-    stats_pokemon_3 = select_all_stats(pokemon_3)
-    stats_pokemon_4 = select_all_stats(pokemon_4)
-    stats_pokemon_5 = select_all_stats(pokemon_5)
-    stats_pokemon_6 = select_all_stats(pokemon_6)
-    # Select a random stat for the question
-    stats = ['hp', 'attack', 'defense', 'special-attack', 'special-defense', 'speed']
-    stat = random.choice(stats)
+        if choice == correct_answer:
+            session['ct'] += 1
+            print("Incremented ct")  # Verifica que se incrementa
 
 
-    # Select a random pokemon for question 4
-    pokemon_7 = select_random_pokemon()
-    stats_pokemon_7 = select_all_stats(pokemon_7)
-    random.shuffle(stats)
+        print(f"Session before redirect: {session}")  # Imprimir el estado de la sesión
+        
+        return redirect(url_for('results'))
+            
+    question, first_quiz, correct_answer = select_random_question()
+    session['correct_answer'] = correct_answer
 
-    # Select a random pokemon for question 5
-    pokemon_8 = select_random_pokemon()
-    stats_pokemon_8 = select_all_stats(pokemon_8)
-    stats_2 = ['hp', 'attack', 'defense', 'special-attack', 'special-defense', 'speed']
-    random.shuffle(stats_2)
-
-
-    return render_template("index.html" ,pokemon=pokemon, habilidades=first_quiz, pokemon_2=pokemon_2, types=second_quiz, unique_pokemons=uniques_pokemons, stat=stat, pokemon_7=pokemon_7, stats_question_4=stats, pokemon_8=pokemon_8, stats_2=stats_2)
+    return render_template("index.html", question=question, quiz=first_quiz)
         
 
 
-@app.route('/search', methods=['POST'])
-def search():
-    
-    selected_habilidades = request.form.getlist('abilities')
-    return f"You selected the following abilities: {selected_habilidades}"
+@app.route('/results', methods=['GET','POST'])
+def results():
+
+    count = session.get('ct', 0)
+
+    return render_template("results.html", count=count)
 
 
 
@@ -87,6 +56,19 @@ def prueba():
         data = select_all_types()
         stats = select_all_stats(pokemon)
         return f"{data}"
+    
+    '''''
+    # Select a random pokemon for question 4
+    pokemon_7 = select_random_pokemon()
+    stats_pokemon_7 = select_all_stats(pokemon_7)
+    random.shuffle(stats)
+
+    # Select a random pokemon for question 5
+    pokemon_8 = select_random_pokemon()
+    stats_pokemon_8 = select_all_stats(pokemon_8)
+    stats_2 = ['hp', 'attack', 'defense', 'special-attack', 'special-defense', 'speed']
+    random.shuffle(stats_2)
+    '''''
     
     return render_template('prueba.html')
 

@@ -151,11 +151,36 @@ def select_all_stats(pokemon):
         stats = []
 
         for stat in info:
+            # Select all the stats_names and stats
             stat_name = stat['stat']['name']
             stat_n = stat['base_stat']
-
+            # Create an object with the info 
             stat_object = {stat_name:stat_n}
+            # Save the object in the array
             stats.append(stat_object)
     else:
         return None
     return stats
+
+def select_specific_stat(pokemon, stat_name):
+    
+    url = f"https://pokeapi.co/api/v2/pokemon/{pokemon}"
+
+    response = requests.get(url)
+    if response.status_code == 200:
+        data = response.json()
+        # Get the stats
+        info = data.get('stats')
+        stat_n = 0
+
+        for stat in info:
+            # Select the stat that i need
+            if stat['stat']['name'] == stat_name:
+                stat_n = stat['base_stat']
+
+    else:
+        return None
+    # Return the stat
+    return stat_n
+
+

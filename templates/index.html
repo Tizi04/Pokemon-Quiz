@@ -16,74 +16,23 @@
 
     <div class="container">
         <section id="p1">
-            <section id="p0">
-                <h3>1- ¿Cuál es la habilidad de {{ pokemon }}?</h3>
-                {% if habilidades %}
-                    {% for habilidad in habilidades %}
-                        <label>
-                            <input type="radio" value="{{ habilidad }}" name="p0"> {{ habilidad }}
-                        </label>
-                        <br>
-                    {% endfor %}
-                {% else %}
-                    <p>No abilities found.</p>
-                {% endif %}
-            </section>
-            <section id="p1">
-                <h3>1- ¿De que tipo es: {{ pokemon_2 }}?</h3>
-                {% if types %}
-                    {% for type in types %}
-                        <label>
-                            <input type="radio" value="{{ type }}" name="p0"> {{ type }}
-                        </label>
-                        <br>
-                    {% endfor %}
-                {% else %}
-                    <p>No type found.</p>
-                {% endif %}
-            </section>
-            <section id="p2">
-                <h3>1- ¿Que Pokemon tiene mas {{ stat }}?</h3>
-                {% if unique_pokemons %}
-                    {% for pokemon in unique_pokemons %}
-                      <label>
-                          <input type="radio" value="{{ pokemon }}" name="p0"> {{ pokemon }}
-                      </label>
-                     <br>
-                   {% endfor %}
-                {% else %}
-                    <p>No Pokémon found.</p>
-                {% endif %}
-            </section>
-            <section id="p3">
-                <h3>1- ¿Cuál es la stat más alta de este Pokémon: {{ pokemon_7 }}?</h3>
-                {% if stats_question_4 %}
-                    {% for stat in stats_question_4 %}
-                       <label>
-                          <input type="radio" value="{{ stat }}" name="p0"> {{ stat }}
-                      </label>
-                     <br>
-                 {% endfor %}
-                {% else %}
-                    <p>No stats found.</p>
-                {% endif %}
-            </section>
-            <section id="p4">
-                <h3>1- Cual es la stat mas baja de este pokemon {{ pokemon_8 }}?</h3>
-                {% if stats_2 %}
-                    {% for stat in stats_2 %}
-                      <label>
-                          <input type="radio" value="{{ stat }}" name="p0"> {{ stat }}
-                      </label>
-                     <br>
-                   {% endfor %}
-                {% else %}
-                    <p>No Pokémon found.</p>
-                {% endif %}
-            </section>
+            <form action="/" method="POST">    
+                <section id="p0">
+                    <h3>1- {{ question }}</h3>
+                    {% if quiz %}
+                        {% for c in quiz %}
+                            <label>
+                                <input type="radio" value="{{ c }}" name="p0"> {{ c }}  <!-- Asegúrate de que 'c' sea el valor correcto -->
+                            </label>
+                            <br>
+                        {% endfor %}
+                    {% else %}
+                        <p>No abilities found.</p>
+                    {% endif %}
+                </section>
+                <button type="submit" id="search">FINISH</button> <!-- Botón dentro del formulario -->
+            </form>
         </section>
-        <button id="search">FINISH</button>
-        <h2>Cantidad acertadas: <span id="resultado"></span></h2>
     </div>
     <script src=""></script>
 </body>
