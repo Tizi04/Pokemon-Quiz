@@ -6,39 +6,40 @@ import secrets
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
-
-@app.route('/', methods=['GET', 'POST'])
-def index():
+question, first_quiz, correct_answer = None, None, None
 
 
-    if request.method == 'POST': 
-
-        choice = request.form.get("p0")
-        correct_answer = session.get('correct_answer')
-        
-        if 'ct' not in session:
-            session['ct'] = 0
-
-
-        print(f"Choice: {choice}, Correct Answer: {correct_answer}")  # Imprime las respuestas para ver si coinciden
-
-        if choice == correct_answer:
-            session['ct'] += 1
-            print("Incremented ct")  # Verifica que se incrementa
-
-
-        print(f"Session before redirect: {session}")  # Imprimir el estado de la sesión
-        
-        return redirect(url_for('results'))
+@app.route('/', methods=['GET'])
+def index(): 
             
     question, first_quiz, correct_answer = select_random_question()
     session['correct_answer'] = correct_answer
 
     return render_template("index.html", question=question, quiz=first_quiz)
         
+@app.route('/', methods=['POST'])
+def validation():
+    
+    choice = request.form.get("p0")
+    correct_answer = session.get('correct_answer')
+        
+    if 'ct' not in session:
+        session['ct'] = 0
 
 
-@app.route('/results', methods=['GET','POST'])
+    print(f"Choice: {choice}, Correct Answer: {correct_answer}")  # Imprime las respuestas para ver si coinciden
+
+    if choice == correct_answer:
+        session['ct'] += 1
+        print("Incremented ct")  # Verifica que se incrementa
+
+
+    print(f"Session before redirect: {session}")  # Imprimir el estado de la sesión
+        
+    return redirect(url_for('results'))
+
+        
+@app.route('/results', methods=['GET'])
 def results():
 
     count = session.get('ct', 0)

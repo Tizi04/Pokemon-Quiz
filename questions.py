@@ -72,9 +72,6 @@ def stats_question():
     stats = ['hp', 'attack', 'defense', 'special-attack', 'special-defense', 'speed']
     stat = random.choice(stats)
 
-    # Select the correct answer
-    correct_answerd = uniques_pokemons[0]
-
     # Question
     question = f"¿Que Pokemon tiene mas {stat}?"
 
@@ -85,16 +82,18 @@ def stats_question():
     stat_pokemon_4 = select_specific_stat(pokemon_4, stat)
 
     stats_list = [stat_pokemon_1, stat_pokemon_2, stat_pokemon_3, stat_pokemon_4]
+    higer_stat = 0
 
-    """
     # Recorrer los Pokémon y sus estadísticas
     for i in range(1, len(uniques_pokemons)):
         if stats_list[i] > higer_stat:
             higer_stat = stats_list[i]
             pokemon_with_higher_stat = uniques_pokemons[i]
-    """
+    
+    # Select the correct answer
+    correct_answerd = pokemon_with_higher_stat
 
-    return question, uniques_pokemons, stat 
+    return question, uniques_pokemons, correct_answerd 
 
 
 def select_random_question():
@@ -105,7 +104,7 @@ def select_random_question():
     3: stats_question
     }
 
-    random_n = random.randint(1,2)
+    random_n = random.randint(1,3)
 
     return question_functions[random_n]()
 
