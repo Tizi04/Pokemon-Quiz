@@ -1,4 +1,4 @@
-from helper import select_random_pokemon, select_pokemon_abilities, select_all_abilities, test, select_pokemon_type, select_all_types, select_all_stats, select_unique_random_pokemon, select_specific_stat
+from helper import select_random_pokemon, select_pokemon_abilities, select_all_abilities, select_pokemon_type, select_all_types, select_all_stats, select_unique_random_pokemon, select_specific_stat, random_move
 import random
 
 def question_abilities():
@@ -7,7 +7,7 @@ def question_abilities():
     abilities = select_pokemon_abilities(pokemon)
     all_abilities = select_all_abilities()
 
-    question = f"Cuál es la habilidad de {pokemon}?"
+    question = f"What is the ability of {pokemon}?"
     correct_answer = random.choice(abilities)
 
     first_quiz = [3]
@@ -31,7 +31,7 @@ def question_types():
     pokemon_type = select_pokemon_type(pokemon_2)
     all_types = select_all_types()
 
-    question = f"De que tipo es {pokemon_2}?"
+    question = f"What type is {pokemon_2}?"
     correct_answer = random.choice(pokemon_type)
 
     new_all_types = [type for type in all_types if type not in pokemon_type]
@@ -50,7 +50,7 @@ def stats_question():
     stats = ['hp', 'attack', 'defense', 'special-attack', 'special-defense', 'speed']
     stat = random.choice(stats)
 
-    question = f"Que Pokemon tiene mas {stat}?"
+    question = f"Which Pokémon has the most {stat}?"
 
     stat_pokemon_1 = select_specific_stat(pokemon_1, stat)
     stat_pokemon_2 = select_specific_stat(pokemon_2, stat)
@@ -71,15 +71,13 @@ def stats_question():
 
 
 def higher_pokemon_stat():
-
-
     pokemon = select_random_pokemon() 
     pokemon_stats = select_all_stats(pokemon)
     higher_stat = 0
     higher_stat_name = None
     stats_name_list = []
 
-    question = f"Cuál es la stat más alta de {pokemon}?"
+    question = f"What is the highest stat of {pokemon}?"
 
     for o in pokemon_stats:
         for k, v in o.items():
@@ -92,29 +90,73 @@ def higher_pokemon_stat():
 
     return question, stats_name_list, correct_answer
 
+def lower_pokemon_stat():
+    pokemon = select_random_pokemon()
+    pokemon_stats = select_all_stats(pokemon)
+    stats_name_list = []
+    lower_stat = 1000
+    lower_stat_name = None    
+    
+    question = f"What is the lowest stat of {pokemon}?"
+    
+    for o in pokemon_stats:
+        for k, v in o.items():
+            if v < lower_stat:
+                lower_stat = v 
+                lower_stat_name = k
+            stats_name_list.append(k)
+    
+    correct_answer = lower_stat_name
+    return question, stats_name_list, correct_answer
+
+def move_types():
+    
+    move_name, move_type = random_move()   
+    types = ["normal", "fighting", "flying",
+             "poison", "ground", "rock",
+             "bug", "ghost", "steel",
+             "fire", "water", "grass",
+             "electric","psychic", "ice",
+             "dragon", "dark", "fairy"]
+    
+    question = f"What type is the move: {move_name}?"
+    correct_answer = move_type
+    
+    quiz = [move_type]
+    
+    while len(quiz) < 5:
+        random_type = random.choice(types)
+        if random_type not in quiz:
+            quiz.append(random_type)
+    
+    return question, quiz, correct_answer
+    
+        
 
 def select_random_question():
     question_functions = {
         1: question_abilities,
         2: question_types,
         3: higher_pokemon_stat,
-        4: stats_question
+        4: stats_question,
+        5: lower_pokemon_stat,
+        6: move_types
     }
 
     # Seleccionar la primera pregunta
-    random_n1 = random.randint(1, 4)
+    random_n1 = random.randint(1, 6)
     first_question = question_functions[random_n1]()
     
     # Asegurarse de que la segunda pregunta sea diferente
-    random_n2 = random.randint(1, 4)
+    random_n2 = random.randint(1, 6)
     while random_n2 == random_n1:
-        random_n2 = random.randint(1, 4)
+        random_n2 = random.randint(1, 6)
     second_question = question_functions[random_n2]()
     
     # Asegurarse de que la tercera pregunta también sea diferente
-    random_n3 = random.randint(1, 4)
+    random_n3 = random.randint(1, 6)
     while random_n3 == random_n1 or random_n3 == random_n2:
-        random_n3 = random.randint(1, 4)
+        random_n3 = random.randint(1, 6)
     third_question = question_functions[random_n3]()
 
     return first_question, second_question, third_question
@@ -123,12 +165,12 @@ def select_random_question():
 """""
 questions = [
     {
-        'name': 'stats2',
-        'question': '¿Cuál es la stat más alta de este Pokémon: {{ pokemon_7 }}??'
+        'name': 'tipos',
+        'question': 'que tipo es efectivo 
         },
     {
-        'name': 'stats3',
-        'question': 'Cual es la stat mas baja de este pokemon {{ pokemon_8 }}?'
+        'name': 'tipos y movimientos ',
+        'question': 'cual de los siguientes movimientos no es de tipo ...?'
         },
         ]
 

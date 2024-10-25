@@ -1,5 +1,5 @@
-from flask import Flask, render_template, request, redirect, url_for, session
-from helper import select_random_pokemon, select_pokemon_abilities, select_all_abilities, test, select_pokemon_type, select_all_types, select_all_stats, select_unique_random_pokemon
+from flask import Flask, render_template, request, redirect, url_for, session, flash
+from helper import select_random_pokemon, select_pokemon_abilities, select_all_abilities, test, select_pokemon_type, select_all_types, select_all_stats, select_unique_random_pokemon, random_move
 from questions import select_random_question
 import random
 import secrets
@@ -8,9 +8,7 @@ app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
 results_list = []
 
-@app.route('/', methods=['GET'])
-def index(): 
-    
+def answers():
     results_list.clear()
 
     selected_question, selected_question_2, selected_question_3 = select_random_question()
@@ -24,6 +22,11 @@ def index():
         results_list.append((question_text, quiz, correct_answer, ct))  
         ct += 1
 
+
+@app.route('/', methods=['GET'])
+def index(): 
+    
+    answers()
     print(results_list) 
     return render_template("index.html", results=results_list)
         
@@ -33,7 +36,11 @@ def validation():
     choices = []
     for i in range(3):
         choice = request.form.get(f"{results_list[i][3]}")  
-        choices.append(choice)  
+        choices.append(choice)
+        
+    if any(choice is None or choice.strip() == "" for choice in choices):
+        flash("Por favor selecciona una respuesta para cada pregunta.")
+        return redirect(url_for('index'))  # Redirige a la página de inicio para volver a intentarlo
 
     session.pop('correct', None)
     session.pop('wrong', None)
@@ -98,7 +105,8 @@ def prueba():
         types = select_pokemon_type(pokemon)
         data = select_all_types()
         stats = select_all_stats(pokemon)
-        return f"{stats}"
+        move = random_move()
+        return f"{move}"
     
     '''''
     # Select a random pokemon for question 4

@@ -162,3 +162,18 @@ def select_specific_stat(pokemon, stat_name):
     return stat_n
 
 
+def random_move():
+    
+    random_n = random.randint(1, 750)
+    
+    url = f"https://pokeapi.co/api/v2/move/{random_n}"
+    
+    response = requests.get(url)
+    if response.status_code == 200:
+        data = response.json()
+        move_name = data.get('name')
+        move_type = data.get('type', {}).get('name', None)
+    else:
+        return None
+    
+    return move_name, move_type     
