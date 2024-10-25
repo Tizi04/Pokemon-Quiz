@@ -1,64 +1,117 @@
-@import url('https://fonts.googleapis.com/css?family=Balsamiq+Sans:wght@400;700&display=swap');
-
-*{
-    box-sizing: border-box;
-    font-family: 'Balsamic Sans';
+/* Estilos generales */
+body {
+    font-family: 'Verdana', sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-header{
+/* Estilos del encabezado */
+header {
+    background-color: #ffcb05; /* Amarillo clásico de Pokémon */
+    color: #2a75bb; /* Azul inspirado en la tipografía de Pokémon */
     text-align: center;
-    background: #ff9f20;
-    color: #000000;
-    padding: 10px 0;
-}
-
-.container{
-    max-width: 700px;
-    margin: auto;
-    padding: 20px;
-}
-
-section{
-    border:  2px solid #5624d0;
-    border-radius: 7px;
-    padding: 10px;
-    margin: 10px 0;
-}
-
-label{
-    display: block;
-    padding: 7px;
-    border-radius: 7px;
-    cursor: pointer;
-    border: 1px dashed #ccc;
-    margin-bottom: 3px;
-}
-
-label:hover{
-    background: #cec0fc;
-}
-
-button{
-    width: 80%;
-    display: block;
-    margin: auto;
-    padding: 10px;
-    background-color: #76d7c8;
-    border: none;
-    cursor: pointer;
     border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 20px; /* Separación de la parte superior */
 }
 
-button:hover{
-    background: #000;
+header h1 {
+    font-size: 2.5rem;
+    margin: 0;
+}
+
+header p {
+    font-size: 1.2rem;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+/* Contenedor general */
+.container {
+    width: 90%;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos de las preguntas */
+#questions section {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 2px solid #ffcb05;
+    border-radius: 10px;
+    background-color: #f5f5f5;
+}
+
+#questions h3 {
+    color: #2a75bb;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+/* Estilos de las opciones */
+label {
+    font-size: 1.1rem;
+    display: block;
+    margin-bottom: 10px;
+    color: #555;
+}
+
+input[type="radio"] {
+    margin-right: 10px;
+}
+
+/* Estilos del botón */
+button#search {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #2a75bb; /* Azul Pokémon */
     color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    margin-top: 20px;
+    transition: background-color 0.3s;
 }
 
-h2{
-    text-align: center;
+button#search:hover {
+    background-color: #ffcb05; /* Cambio a amarillo al pasar el mouse */
+    color: #2a75bb;
 }
 
-#resultado{
-    font-size: 30px;
-    color: darkred;
+button#search:active {
+    background-color: #2a75bb;
+    color: #fff;
+    transform: scale(0.98); /* Pequeña animación al hacer clic */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 2rem;
+    }
+
+    header p {
+        font-size: 1rem;
+    }
+
+    #questions h3 {
+        font-size: 1.2rem;
+    }
+
+    button#search {
+        width: 100%;
+    }
 }

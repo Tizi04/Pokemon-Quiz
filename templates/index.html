@@ -15,24 +15,27 @@
     </header>
 
     <div class="container">
-        <section id="p1">
-            <form action="/" method="POST">    
-                <section id="p0">
-                    <h3>1- {{ question }}</h3>
-                    {% if quiz %}
-                        {% for c in quiz %}
-                            <label>
-                                <input type="radio" value="{{ c }}" name="p0"> {{ c }}  <!-- Asegúrate de que 'c' sea el valor correcto -->
-                            </label>
-                            <br>
-                        {% endfor %}
-                    {% else %}
-                        <p>No abilities found.</p>
-                    {% endif %}
-                </section>
+        <section id="questions">
+            <form action="/" method="POST">
+                {% for result in results %}
+                    <section id="p{{ loop.index }}">
+                        <h3>{{ loop.index }}- {{ result[0] }}</h3>  <!-- Muestra la pregunta -->
+                        {% if result[1] %}  <!-- result[1] contiene el quiz -->
+                            {% for c in result[1] %}
+                                <label>
+                                    <input type="radio" value="{{ c }}" name="{{ result[3] }}"> {{ c }}  <!-- Cada grupo tiene un nombre único -->
+                                </label>
+                                <br>
+                            {% endfor %}
+                        {% else %}
+                            <p>No abilities found.</p>
+                        {% endif %}
+                    </section>
+                {% endfor %}
                 <button type="submit" id="search">FINISH</button> <!-- Botón dentro del formulario -->
             </form>
         </section>
+          
     </div>
     <script src=""></script>
 </body>

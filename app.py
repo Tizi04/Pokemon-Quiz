@@ -6,35 +6,74 @@ import secrets
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
-question, first_quiz, correct_answer = None, None, None
-
+results_list = []
 
 @app.route('/', methods=['GET'])
 def index(): 
-            
-    question, first_quiz, correct_answer = select_random_question()
-    session['correct_answer'] = correct_answer
+    
+    results_list.clear()
 
-    return render_template("index.html", question=question, quiz=first_quiz)
+    selected_question, selected_question_2, selected_question_3 = select_random_question()
+    ct = 0
+  
+    print(selected_question, selected_question_2, selected_question_3)
+
+  
+    for question in (selected_question, selected_question_2, selected_question_3):
+        question_text, quiz, correct_answer = question
+        results_list.append((question_text, quiz, correct_answer, ct))  
+        ct += 1
+
+    print(results_list) 
+    return render_template("index.html", results=results_list)
         
 @app.route('/', methods=['POST'])
 def validation():
-    
-    choice = request.form.get("p0")
-    correct_answer = session.get('correct_answer')
-        
-    if 'ct' not in session:
-        session['ct'] = 0
 
+    choices = []
+    for i in range(3):
+        choice = request.form.get(f"{results_list[i][3]}")  
+        choices.append(choice)  
 
-    print(f"Choice: {choice}, Correct Answer: {correct_answer}")  # Imprime las respuestas para ver si coinciden
+    session.pop('correct', None)
+    session.pop('wrong', None)
+    session.pop('mistakes', None)
+    session.pop('successes', None)
 
-    if choice == correct_answer:
-        session['ct'] += 1
-        print("Incremented ct")  # Verifica que se incrementa
+    if 'correct' not in session:
+        session['correct'] = 0
 
+    if 'wrong' not in session:
+        session['wrong'] = 0
 
-    print(f"Session before redirect: {session}")  # Imprimir el estado de la sesión
+    if 'mistakes' not in session:
+        session['mistakes'] = []
+
+    if 'successes' not in session:
+        session['successes'] = []
+
+    for i, q in enumerate(results_list):  
+        correct_answer = q[2] 
+
+        print(f"Choice: {choices[i]}, Correct Answer: {correct_answer}")  
+
+        if choices[i] == correct_answer:  
+            session['correct'] += 1
+            session['successes'].append({
+                'question': q[0],
+                'chosen_answer': choices[i]
+            })  
+            print("Incremented correct")  
+        else:
+            session['wrong'] += 1
+            session['mistakes'].append({
+                'question': q[0],  
+                'chosen_answer': choices[i],  
+                'correct_answer': correct_answer  
+            })
+            print("Incremented wrong")      
+
+    print(f"Session before redirect: {session}")  
         
     return redirect(url_for('results'))
 
@@ -42,9 +81,12 @@ def validation():
 @app.route('/results', methods=['GET'])
 def results():
 
-    count = session.get('ct', 0)
+    correct = session.get('correct', 0)
+    wrong = session.get('wrong', 0)
+    mistakes = session.get('mistakes', [])
+    succeses = session.get('successes', [])
 
-    return render_template("results.html", count=count)
+    return render_template("results.html", correct=correct, wrong=wrong, succeses=succeses, mistakes=mistakes)
 
 
 
@@ -56,7 +98,7 @@ def prueba():
         types = select_pokemon_type(pokemon)
         data = select_all_types()
         stats = select_all_stats(pokemon)
-        return f"{data}"
+        return f"{stats}"
     
     '''''
     # Select a random pokemon for question 4

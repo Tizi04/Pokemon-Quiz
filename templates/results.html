@@ -3,11 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/results.css">
     <title>Resultados</title>
 </head>
 <body>
     <h1>Resultados del Quiz</h1>
-    <p>Respuesta correcta: {{ count }}</p> <!-- Mostrar el valor de ct -->
+    <p>Respuesta correcta: {{ correct }}</p> <!-- Mostrar el valor de ct -->
+    <h3 id="succes">Aciertos:</h3>
+    {% if succeses %}
+    <ul>
+        {% for succes in succeses %}
+            <li>
+                Pregunta: {{ succes['question'] }}<br>
+                Tu respuesta: <span class="correctChosen">{{ succes['chosen_answer'] }}</span><br>
+            </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <br>
+    <p>Respuestas incorrectas: {{ wrong }}</p>
+    {% if mistakes %}
+    <h3>Errores:</h3>
+    <ul>
+        {% for mistake in mistakes %}
+            <li>
+                Pregunta: {{ mistake['question'] }}<br>
+                Tu respuesta: <span class="chosen">{{ mistake['chosen_answer'] }}</span><br>
+                Respuesta correcta: <span class="correct">{{ mistake['correct_answer'] }}</span>
+            </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    
     <a href="/">Volver a jugar</a>
+    <br>
 </body>
 </html>
