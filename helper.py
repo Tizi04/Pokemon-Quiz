@@ -177,3 +177,23 @@ def random_move():
         return None
     
     return move_name, move_type     
+
+def damage_relations_helper(type, relation):
+    
+    url = f"https://pokeapi.co/api/v2/type/{type}/"
+    
+    response = requests.get(url)
+    
+    if response.status_code == 200:
+        data = response.json()
+        damage_relations = data.get('damage_relations', {}).get(f'{relation}')
+        if not damage_relations:
+            return ["None"]
+        types = []
+        for type in damage_relations:
+            types.append(type.get('name'))
+    else:
+        return None
+    
+    
+    return types

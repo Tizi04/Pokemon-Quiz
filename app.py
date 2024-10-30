@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-from helper import select_random_pokemon, select_pokemon_abilities, select_all_abilities, test, select_pokemon_type, select_all_types, select_all_stats, select_unique_random_pokemon, random_move
+from helper import select_random_pokemon, select_pokemon_abilities, select_all_abilities, test, select_pokemon_type, select_all_types, select_all_stats, select_unique_random_pokemon, random_move, damage_relations_helper
 from questions import select_random_question
 import random
 import secrets
@@ -100,13 +100,15 @@ def results():
 @app.route('/prueba', methods=['GET', 'POST'])
 def prueba():
     if request.method == 'POST':
+        # Route where i test the helpers
         pokemon = request.form.get('pokemon')
         info = test()
         types = select_pokemon_type(pokemon)
         data = select_all_types()
         stats = select_all_stats(pokemon)
         move = random_move()
-        return f"{move}"
+        relation_types = damage_relations_helper('ice','double_damage_to')
+        return f"{relation_types}"
     
     '''''
     # Select a random pokemon for question 4

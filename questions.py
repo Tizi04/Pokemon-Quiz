@@ -1,4 +1,4 @@
-from helper import select_random_pokemon, select_pokemon_abilities, select_all_abilities, select_pokemon_type, select_all_types, select_all_stats, select_unique_random_pokemon, select_specific_stat, random_move
+from helper import select_random_pokemon, select_pokemon_abilities, select_all_abilities, select_pokemon_type, select_all_types, select_all_stats, select_unique_random_pokemon, select_specific_stat, random_move, damage_relations_helper
 import random
 
 def question_abilities():
@@ -9,7 +9,8 @@ def question_abilities():
 
     question = f"What is the ability of {pokemon}?"
     correct_answer = random.choice(abilities)
-
+    n_correct_answer = correct_answer.replace("-", " ")
+    
     first_quiz = [3]
     first_quiz = random.sample(all_abilities, 3)
     first_quiz.append(correct_answer)    
@@ -22,7 +23,7 @@ def question_abilities():
     print(f"Pokemon: {pokemon}, Correct Answer: {correct_answer}, Options: {first_quiz}")  # Debugging line
 
 
-    return question, first_quiz, correct_answer
+    return question, first_quiz, n_correct_answer
 
 def question_types():
 
@@ -130,8 +131,49 @@ def move_types():
             quiz.append(random_type)
     
     return question, quiz, correct_answer
+
+def damage_relationship():
     
-        
+    
+    types = ["normal", "fighting", "flying",
+             "poison", "ground", "rock",
+             "bug", "ghost", "steel",
+             "fire", "water", "grass",
+             "electric","psychic", "ice",
+             "dragon", "dark", "fairy"]
+    
+    q_types = ["normal", "fighting", "flying",
+             "poison", "ground", "rock",
+             "bug", "ghost", "steel","None",
+             "fire", "water", "grass",
+             "electric","psychic", "ice",
+             "dragon", "dark", "fairy","None"]
+    
+    relationship = ["double_damage_from", "double_damage_to", "half_damage_from", 
+                    "half_damage_to", "no_damage_from", "no_damage_to"]
+    
+    r_type = random.choice(types)
+    r_relation = random.choice(relationship)
+    relation_types = damage_relations_helper(r_type, r_relation)
+    correct_answer = random.choice(relation_types)
+    quiz = []
+    
+    if "from" in r_relation:
+        relation_q = r_relation.replace("from", "").replace("_", " ")
+        question = f"Which of the following types does {relation_q} against {r_type}-type Pokémon?"
+    else:
+        relation_q = r_relation.replace("to", "").replace("_", " ")
+        question = f"Which of the following types recive {relation_q} against {r_type}-type Pokémon?" 
+    
+    quiz.append(correct_answer)
+    
+    while len(quiz) != 4:
+        random_type = random.choice(q_types)
+        if random_type not in quiz and random_type not in relation_types:
+            quiz.append(random_type)
+
+    return question, quiz, correct_answer
+               
 
 def select_random_question():
     question_functions = {
@@ -140,23 +182,21 @@ def select_random_question():
         3: higher_pokemon_stat,
         4: stats_question,
         5: lower_pokemon_stat,
-        6: move_types
+        6: move_types,
+        7: damage_relationship
     }
 
-    # Seleccionar la primera pregunta
-    random_n1 = random.randint(1, 6)
+    random_n1 = random.randint(1, 7)
     first_question = question_functions[random_n1]()
     
-    # Asegurarse de que la segunda pregunta sea diferente
-    random_n2 = random.randint(1, 6)
+    random_n2 = random.randint(1, 7)
     while random_n2 == random_n1:
-        random_n2 = random.randint(1, 6)
+        random_n2 = random.randint(1, 7)
     second_question = question_functions[random_n2]()
     
-    # Asegurarse de que la tercera pregunta también sea diferente
-    random_n3 = random.randint(1, 6)
+    random_n3 = random.randint(1, 7)
     while random_n3 == random_n1 or random_n3 == random_n2:
-        random_n3 = random.randint(1, 6)
+        random_n3 = random.randint(1, 7)
     third_question = question_functions[random_n3]()
 
     return first_question, second_question, third_question
